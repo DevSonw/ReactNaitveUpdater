@@ -20,12 +20,12 @@
 		C695E7D11CCF410F0070DC20 /* NSString+UriCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = C695E7C71CCF410F0070DC20 /* NSString+UriCompatibility.m */; };
 		C695E7D21CCF410F0070DC20 /* ReactNativeUpdater.m in Sources */ = {isa = PBXBuildFile; fileRef = C695E7CA1CCF410F0070DC20 /* ReactNativeUpdater.m */; };
 		C695E7DF1CCF4A580070DC20 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = C695E7DE1CCF4A580070DC20 /* config.json */; };
-		C695E7E21CCF4AB70070DC20 /* V1.1.txt in Resources */ = {isa = PBXBuildFile; fileRef = C695E7E01CCF4AB70070DC20 /* V1.1.txt */; };
-		C695E7E31CCF4AB70070DC20 /* V2.1.txt in Resources */ = {isa = PBXBuildFile; fileRef = C695E7E11CCF4AB70070DC20 /* V2.1.txt */; };
-		C695E7E51CCF4B120070DC20 /* bundle.diff in Resources */ = {isa = PBXBuildFile; fileRef = C695E7E41CCF4B120070DC20 /* bundle.diff */; };
 		C695E7E81CCF4BD90070DC20 /* UpdaterConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = C695E7E71CCF4BD90070DC20 /* UpdaterConfig.m */; };
 		C695E8001CD0942D0070DC20 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = C695E7FF1CD0942D0070DC20 /* main.jsbundle */; };
 		C695E8031CD0AEEC0070DC20 /* UpdateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = C695E8021CD0AEEC0070DC20 /* UpdateOperation.m */; };
+		C695E8071CD0D8290070DC20 /* baidu.html in Resources */ = {isa = PBXBuildFile; fileRef = C695E8061CD0D8290070DC20 /* baidu.html */; };
+		C695E8091CD0DB340070DC20 /* google.html in Resources */ = {isa = PBXBuildFile; fileRef = C695E8081CD0DB340070DC20 /* google.html */; };
+		C695E80B1CD0DC4B0070DC20 /* bundle.diff in Resources */ = {isa = PBXBuildFile; fileRef = C695E80A1CD0DC4B0070DC20 /* bundle.diff */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,14 +55,14 @@
 		C695E7C91CCF410F0070DC20 /* ReactNativeUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReactNativeUpdater.h; sourceTree = "<group>"; };
 		C695E7CA1CCF410F0070DC20 /* ReactNativeUpdater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReactNativeUpdater.m; sourceTree = "<group>"; };
 		C695E7DE1CCF4A580070DC20 /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
-		C695E7E01CCF4AB70070DC20 /* V1.1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = V1.1.txt; sourceTree = "<group>"; };
-		C695E7E11CCF4AB70070DC20 /* V2.1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = V2.1.txt; sourceTree = "<group>"; };
-		C695E7E41CCF4B120070DC20 /* bundle.diff */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = bundle.diff; sourceTree = "<group>"; };
 		C695E7E61CCF4BD90070DC20 /* UpdaterConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdaterConfig.h; sourceTree = "<group>"; };
 		C695E7E71CCF4BD90070DC20 /* UpdaterConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdaterConfig.m; sourceTree = "<group>"; };
 		C695E7FF1CD0942D0070DC20 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		C695E8011CD0AEEC0070DC20 /* UpdateOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateOperation.h; sourceTree = "<group>"; };
 		C695E8021CD0AEEC0070DC20 /* UpdateOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateOperation.m; sourceTree = "<group>"; };
+		C695E8061CD0D8290070DC20 /* baidu.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = baidu.html; sourceTree = "<group>"; };
+		C695E8081CD0DB340070DC20 /* google.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = google.html; sourceTree = "<group>"; };
+		C695E80A1CD0DC4B0070DC20 /* bundle.diff */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = bundle.diff; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,9 +98,9 @@
 				C695E7761CCF3E670070DC20 /* AppDelegate.h */,
 				C695E7771CCF3E670070DC20 /* AppDelegate.m */,
 				C695E7DE1CCF4A580070DC20 /* config.json */,
-				C695E7E41CCF4B120070DC20 /* bundle.diff */,
-				C695E7E01CCF4AB70070DC20 /* V1.1.txt */,
-				C695E7E11CCF4AB70070DC20 /* V2.1.txt */,
+				C695E8061CD0D8290070DC20 /* baidu.html */,
+				C695E8081CD0DB340070DC20 /* google.html */,
+				C695E80A1CD0DC4B0070DC20 /* bundle.diff */,
 				C695E7FF1CD0942D0070DC20 /* main.jsbundle */,
 				C695E7C81CCF410F0070DC20 /* Updater */,
 				C695E7B81CCF410F0070DC20 /* DiffTools */,
@@ -222,11 +222,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				C695E7801CCF3E670070DC20 /* Assets.xcassets in Resources */,
-				C695E7E31CCF4AB70070DC20 /* V2.1.txt in Resources */,
-				C695E7E51CCF4B120070DC20 /* bundle.diff in Resources */,
+				C695E8071CD0D8290070DC20 /* baidu.html in Resources */,
+				C695E80B1CD0DC4B0070DC20 /* bundle.diff in Resources */,
 				C695E8001CD0942D0070DC20 /* main.jsbundle in Resources */,
 				C695E7DF1CCF4A580070DC20 /* config.json in Resources */,
-				C695E7E21CCF4AB70070DC20 /* V1.1.txt in Resources */,
+				C695E8091CD0DB340070DC20 /* google.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "ReactNativeUpdater.h"
+#import "DiffMatchPatch.h"
 
 @interface AppDelegate ()
 
@@ -27,7 +28,7 @@
 - (void)checkForUpdate {
     ReactNativeUpdater *update = [ReactNativeUpdater sharedInstance];
    
-    [update updateWithConfigUrl:@"https://github.com/DevSonw/ReactNaitveUpdater/blob/master/ReactNativeUpdater/config.json" bundleUrl:@"https://www.baiud.com" Success:^(UpdateOperation *opreation) {
+    [update updateWithConfigUrl:@"https://www.baidu.com" bundleUrl:@"https://www.baiud.com" Success:^(UpdateOperation *opreation) {
         NSLog(@"---%@",opreation.message);
         
     } failure:^(UpdateOperation *opreation) {
@@ -36,9 +37,33 @@
         
     }];
 }
+
 - (void)displayUI {
     UIViewController *viewController = [[UIViewController alloc]init];
     viewController.view.backgroundColor = [UIColor whiteColor];
+    
+    NSURL *googleUrl = [[NSBundle mainBundle] URLForResource:@"google" withExtension:@"html"];
+    NSString *googleString = [NSString stringWithContentsOfURL:googleUrl encoding:NSUTF8StringEncoding error:nil];
+    
+    NSURL *baiduUrl = [[NSBundle mainBundle] URLForResource:@"baidu" withExtension:@"html"];
+    NSString *baiduString = [NSString stringWithContentsOfURL:baiduUrl encoding:NSUTF8StringEncoding error:nil];
+    
+    NSURL *diffUrl = [[NSBundle mainBundle]URLForResource:@"bundle" withExtension:@"diff"];
+    NSData *diffData = [NSData dataWithContentsOfURL:diffUrl];
+    NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithData:diffData];
+    DiffMatchPatch *match = [[DiffMatchPatch alloc]init];
+    
+    NSArray *currentArray = [match patch_apply:array toString:googleString];
+    NSString *string = currentArray[0];
+    
+    if ([string isEqualToString:baiduString]) {
+        NSLog(@"google页面加上增量修改后，完全等于baidu 页面的内容");
+    }
+    
+    UIWebView *web = [[UIWebView alloc]initWithFrame:viewController.view.frame];
+    [web loadRequest:[NSURLRequest requestWithURL:baiduUrl]];
+    [viewController.view addSubview:web];
+    
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
     self.window.backgroundColor = [UIColor clearColor];
     self.window.rootViewController = viewController;
