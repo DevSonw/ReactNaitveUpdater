@@ -26,6 +26,7 @@
 		C695E8071CD0D8290070DC20 /* baidu.html in Resources */ = {isa = PBXBuildFile; fileRef = C695E8061CD0D8290070DC20 /* baidu.html */; };
 		C695E8091CD0DB340070DC20 /* google.html in Resources */ = {isa = PBXBuildFile; fileRef = C695E8081CD0DB340070DC20 /* google.html */; };
 		C695E80B1CD0DC4B0070DC20 /* bundle.diff in Resources */ = {isa = PBXBuildFile; fileRef = C695E80A1CD0DC4B0070DC20 /* bundle.diff */; };
+		C695E80E1CD0F16B0070DC20 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C695E80D1CD0F16B0070DC20 /* NSDictionaryAdditions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,8 @@
 		C695E8061CD0D8290070DC20 /* baidu.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = baidu.html; sourceTree = "<group>"; };
 		C695E8081CD0DB340070DC20 /* google.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = google.html; sourceTree = "<group>"; };
 		C695E80A1CD0DC4B0070DC20 /* bundle.diff */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = bundle.diff; sourceTree = "<group>"; };
+		C695E80C1CD0F16B0070DC20 /* NSDictionaryAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionaryAdditions.h; sourceTree = "<group>"; };
+		C695E80D1CD0F16B0070DC20 /* NSDictionaryAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDictionaryAdditions.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +163,8 @@
 				C695E7CA1CCF410F0070DC20 /* ReactNativeUpdater.m */,
 				C695E8011CD0AEEC0070DC20 /* UpdateOperation.h */,
 				C695E8021CD0AEEC0070DC20 /* UpdateOperation.m */,
+				C695E80C1CD0F16B0070DC20 /* NSDictionaryAdditions.h */,
+				C695E80D1CD0F16B0070DC20 /* NSDictionaryAdditions.m */,
 			);
 			path = Updater;
 			sourceTree = "<group>";
@@ -249,6 +254,7 @@
 				C695E7E81CCF4BD90070DC20 /* UpdaterConfig.m in Sources */,
 				C695E7D01CCF410F0070DC20 /* NSString+UnicharUtilities.m in Sources */,
 				C695E8031CD0AEEC0070DC20 /* UpdateOperation.m in Sources */,
+				C695E80E1CD0F16B0070DC20 /* NSDictionaryAdditions.m in Sources */,
 				C695E7751CCF3E670070DC20 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

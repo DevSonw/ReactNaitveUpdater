@@ -106,6 +106,14 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     }
     return self.currentConfigFile? self.currentConfigFile : self.defaultConfigFile;
 }
+//对比配置文件 是否下载新的bundle
+- (ReactNativeUpdateType)shouldDownloadUpdateFileWithLastConfig:(UpdaterConfig *)updateConfig {
+    //updatefig为最新服务器上的config,
+    //1.首先拿到本地保存的json配置文件
+    //配置文件中如果有升级信息，就直接应用配置文件中的升级规则
+    
+    return NO;
+}
 
 /*
  ------>> 传入两个Url，自动控制升级
@@ -117,14 +125,18 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
         NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
         
         UpdaterConfig *config = [[UpdaterConfig alloc]initWithDic:dictionary];
-        
-        if ([self shouldDownloadUpdateFileWithLastConfig:config]) {
+        ReactNativeUpdateType updateType =[self shouldDownloadUpdateFileWithLastConfig:config];
+        if (updateType) {
             //如果需下载最新的Bundle file
             [self downloadLastFileFromUrl:[NSURL URLWithString:bundleUrlString] fileType:fileTypeJSBundle completionHandler:^(NSData * _Nullable responseData, NSURLResponse * _Nullable responseContent, NSError * _Nullable error) {
                 //此时已经确定升级
                 //1.校验，解压，
-                //2.
-                
+                //2.拿到文件后，执行传入文件方法。
+                [self updateWithFile:nil updateType:updateType Success:^(UpdateOperation *opreation) {
+                    
+                } failure:^(UpdateOperation *opreation) {
+                    
+                }];
             }];
         }else{
             //不需要下载最新的bunlde
@@ -156,6 +168,38 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     
 }
 
+//执行升级
+- (void)updateWithFile:(NSURL *)file updateType:(ReactNativeUpdateType)updateType Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure {
+    
+    switch (updateType) {
+        case ReactNativeUpdateEntiretyUpdate:
+        {
+            //全量
+            
+            
+        }
+            break;
+        case ReactNativeUpdatePartUpdate:
+        {
+            //增量
+            
+            
+        }
+            break;
+        case ReactNativeUpdatePatchUpdate:
+        {
+            //补丁
+            
+            
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+}
+
 //下载文件
 - (void)downloadLastFileFromUrl:(NSURL *)downloadUrl fileType:(NSString *)fileType completionHandler:(void (^)(NSData * __nullable responseData, NSURLResponse * __nullable responseContent, NSError * __nullable error))completionHandler {
     
@@ -169,15 +213,6 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     NSURLSessionDataTask *dataTask = [session dataTaskWithURL:downloadUrl completionHandler:completionHandler];
     [dataTask resume];
     
-}
-
-//对比配置文件 是否下载新的bundle
-- (BOOL)shouldDownloadUpdateFileWithLastConfig:(UpdaterConfig *)updateConfig {
-    //updatefig为最新服务器上的config,
-    //1.首先拿到本地保存的json配置文件
-    
-    
-    return NO;
 }
 
 
