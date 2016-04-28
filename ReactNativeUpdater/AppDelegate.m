@@ -52,7 +52,6 @@
     NSData *diffData = [NSData dataWithContentsOfURL:diffUrl];
     NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithData:diffData];
     DiffMatchPatch *match = [[DiffMatchPatch alloc]init];
-    
     NSArray *currentArray = [match patch_apply:array toString:googleString];
     NSString *string = currentArray[0];
     

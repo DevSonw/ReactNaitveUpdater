@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "NSDictionaryAdditions.h"
 
 @interface UpdateOperation : NSObject
 

@@ -121,9 +121,16 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 - (void)updateWithConfigUrl:(NSString *)configUrlString bundleUrl:(NSString *)bundleUrlString Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure {
     //1.首先下载并保存最新的Config文件
     [self downloadLastFileFromUrl:[NSURL URLWithString:configUrlString] fileType:fileTypeConfig completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        
-        NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-        
+        if (error) {
+            
+            return ;
+        }
+        NSError *serializaError;
+        NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&serializaError];
+        if (serializaError) {
+            
+            return ;
+        }
         UpdaterConfig *config = [[UpdaterConfig alloc]initWithDic:dictionary];
         ReactNativeUpdateType updateType =[self shouldDownloadUpdateFileWithLastConfig:config];
         if (updateType) {
@@ -165,6 +172,13 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
  ————-->> 传入两个文件 自动控制升级
  */
 - (void)updateWithConfigFile:(NSURL *)configFile bundleFile:(NSURL *)bundleFile Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure {
+    NSData *configData = [NSData dataWithContentsOfURL:configFile];
+    NSError *serializaError;
+    NSDictionary *confiDic = [NSJSONSerialization JSONObjectWithData:configData options:NSJSONReadingMutableContainers error:&serializaError];
+    if (serializaError) {
+        return;
+    }
+   
     
 }
 

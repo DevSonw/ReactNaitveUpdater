@@ -22,7 +22,7 @@
 }
 
 - (time_t)getTimeValueForKey:(NSString *)key defaultValue:(time_t)defaultValue {
-	NSString *stringTime   = [self objectForKey:key];
+	NSString *stringTime   = [NSString stringWithFormat:@"%@",[self objectForKey:key]];
     if ((id)stringTime == [NSNull null]) {
         stringTime = @"";
     }
@@ -46,7 +46,7 @@
 
 - (NSString *)getStringValueForKey:(NSString *)key defaultValue:(NSString *)defaultValue {
 	return [self objectForKey:key] == nil || [self objectForKey:key] == [NSNull null] 
-				? defaultValue : [self objectForKey:key];
+				? defaultValue : [NSString stringWithFormat:@"%@",[self objectForKey:key]];
 }
 
 

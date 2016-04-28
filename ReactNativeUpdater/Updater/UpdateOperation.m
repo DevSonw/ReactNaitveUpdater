@@ -12,9 +12,9 @@
 -(instancetype)initWithDic:(NSDictionary *)dic {
     self = [super init];
     if (self) {
-        _message = [dic objectForKey:@"message"];
-        _code = [[dic objectForKey:@"code"]integerValue];
-        _error = [dic objectForKey:@"error"];
+        _message = [dic getStringValueForKey:@"message" defaultValue:@""];
+        _code = [dic getIntValueForKey:@"code" defaultValue:0];
+        _error =[dic objectForKey:@"error"];
     }
     return self;
 }

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ReactNativeUpdater.h"
+#import "NSDictionaryAdditions.h"
 
 @interface UpdaterConfig : NSObject
 
