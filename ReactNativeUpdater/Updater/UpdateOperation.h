@@ -13,7 +13,7 @@
 
 -(instancetype)initWithDic:(NSDictionary *)dic;
 
-@property(nonatomic,strong)NSString *message;
+@property(nonatomic,copy)NSString *message;
 
 @property(nonatomic,assign)NSInteger code;
 

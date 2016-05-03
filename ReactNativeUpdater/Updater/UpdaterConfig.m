@@ -19,6 +19,7 @@
         _md5 = [dic getStringValueForKey:@"md5" defaultValue:@""];
         _desc = [dic getStringValueForKey:@"desc" defaultValue:@""];
         _date = [dic getStringValueForKey:@"date" defaultValue:@""];
+        _type = [dic getStringValueForKey:@"type" defaultValue:@""];
     }
     return self;
 }

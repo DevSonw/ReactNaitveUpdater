@@ -99,6 +99,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 }
 
 //获取当前的配置文件,如果没有则返回默认的bundle 中的配置文件
+
 - (NSURL*)currentConfigFile{
     NSString* currentConfigFileString = [[self codeDirectory] stringByAppendingPathComponent:@"config.json"];
     if (currentConfigFileString && [[NSFileManager defaultManager] fileExistsAtPath:currentConfigFileString]) {
@@ -106,13 +107,41 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     }
     return self.currentConfigFile? self.currentConfigFile : self.defaultConfigFile;
 }
+
+//通过文件获得UpdateConfig
+- (UpdaterConfig *)updateConfigByConfigFile:(NSURL *)configFile {
+    NSData *configData = [NSData dataWithContentsOfURL:configFile];
+    NSError *serializaError;
+    NSDictionary *confiDic = [NSJSONSerialization JSONObjectWithData:configData options:NSJSONReadingMutableContainers error:&serializaError];
+    if (serializaError) {
+        return nil;
+    }
+    UpdaterConfig *config = [[UpdaterConfig alloc]initWithDic:confiDic];
+    return config;
+}
+//
+
+
 //对比配置文件 是否下载新的bundle
 - (ReactNativeUpdateType)shouldDownloadUpdateFileWithLastConfig:(UpdaterConfig *)updateConfig {
     //updatefig为最新服务器上的config,
     //1.首先拿到本地保存的json配置文件
     //配置文件中如果有升级信息，就直接应用配置文件中的升级规则
+    NSURL *currentConfigUrl = [self currentConfigFile];
+    UpdaterConfig *currentConfig = [self updateConfigByConfigFile:currentConfigUrl];
+    //对比配置文件确定升级规则
+    //1.如果APP版本不对， 不升级
+    if(updateConfig.appVersion.floatValue!=currentConfig.appVersion.floatValue) {
+        return ReactNativeUpdateNotUpdate;
+    }
+    //升级规则有待完善，可自定规则
     
-    return NO;
+    
+    
+    
+    
+    
+    return ReactNativeUpdateNotUpdate;
 }
 
 /*
@@ -133,7 +162,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
         }
         UpdaterConfig *config = [[UpdaterConfig alloc]initWithDic:dictionary];
         ReactNativeUpdateType updateType =[self shouldDownloadUpdateFileWithLastConfig:config];
-        if (updateType) {
+        if (updateType > 0) {
             //如果需下载最新的Bundle file
             [self downloadLastFileFromUrl:[NSURL URLWithString:bundleUrlString] fileType:fileTypeJSBundle completionHandler:^(NSData * _Nullable responseData, NSURLResponse * _Nullable responseContent, NSError * _Nullable error) {
                 //此时已经确定升级
@@ -141,7 +170,9 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
                 //2.拿到文件后，执行传入文件方法。
                 [self updateWithFile:nil updateType:updateType Success:^(UpdateOperation *opreation) {
                     
+                    
                 } failure:^(UpdateOperation *opreation) {
+                    
                     
                 }];
             }];
@@ -168,19 +199,22 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 
 
 
-/*
+/*  暂时先不管
  ————-->> 传入两个文件 自动控制升级
- */
+ 
 - (void)updateWithConfigFile:(NSURL *)configFile bundleFile:(NSURL *)bundleFile Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure {
-    NSData *configData = [NSData dataWithContentsOfURL:configFile];
-    NSError *serializaError;
-    NSDictionary *confiDic = [NSJSONSerialization JSONObjectWithData:configData options:NSJSONReadingMutableContainers error:&serializaError];
-    if (serializaError) {
-        return;
+    UpdaterConfig *config = [self updateConfigByConfigFile:configFile];
+    ReactNativeUpdateType updateType =[self shouldDownloadUpdateFileWithLastConfig:config];
+    if (updateType > 0) {
+        [self updateWithFile:bundleFile updateType:updateType Success:^(UpdateOperation *opreation) {
+            
+        } failure:^(UpdateOperation *opreation) {
+            
+        }];
     }
-   
-    
 }
+
+ */
 
 //执行升级
 - (void)updateWithFile:(NSURL *)file updateType:(ReactNativeUpdateType)updateType Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure {

@@ -19,6 +19,7 @@
 #import "UpdateOperation.h"
 
 typedef NS_ENUM(NSUInteger, ReactNativeUpdateType) {
+    ReactNativeUpdateNotUpdate = 0, //不升级
     ReactNativeUpdateEntiretyUpdate = 1,
     ReactNativeUpdatePartUpdate, //Default
     ReactNativeUpdatePatchUpdate,
