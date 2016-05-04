@@ -6,7 +6,12 @@
 //  Copyright © 2016年 RainbowColors. All rights reserved.
 //
 
+//
 /*
+ config 文件，明文保存json文件
+ bundle 文件 diff 文件， 加密，压缩
+ 升级完成以后只保存加密后的bundle 文件。
+ 
  //使用指南
  1.首先到获取到最新的配置文件，对比是否需要升级。
  2.根据最新配置文件信息，是否请求最新的JSBunlde.
@@ -19,11 +24,11 @@
 #import "UpdateOperation.h"
 
 typedef NS_ENUM(NSUInteger, ReactNativeUpdateType) {
-    ReactNativeUpdateNotUpdate = 0, //不升级
-    ReactNativeUpdateEntiretyUpdate = 1,
+    ReactNativeUpdateRollBack = 0,
+    ReactNativeUpdateNotUpdate = 1, //不升级
+    ReactNativeUpdateEntiretyUpdate = 2,
     ReactNativeUpdatePartUpdate, //Default
     ReactNativeUpdatePatchUpdate,
-    ReactNativeUpdateRollBack,
 };
 
 typedef NS_ENUM(NSUInteger, ReactNativeUpdateApplyType) {
@@ -47,8 +52,4 @@ typedef NS_ENUM(NSUInteger, ReactNativeUpdateApplyType) {
          ------>> 传入两个Url，自动控制升级
      */
 - (void)updateWithConfigUrl:(NSString *)configUrlString bundleUrl:(NSString *)bundleUrlString Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure;
-    /*
-         ————-->> 传入两个文件 自动控制升级
-    */
-- (void)updateWithConfigFile:(NSURL *)configFile bundleFile:(NSURL *)bundleFile Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure;
 @end

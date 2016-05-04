@@ -178,12 +178,20 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
  ------>> 传入两个Url，自动控制升级
  */
 - (void)updateWithConfigUrl:(NSString *)configUrlString bundleUrl:(NSString *)bundleUrlString Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure {
-    //1.首先下载并保存最新的Config文件
-    [self downloadLastFileFromUrl:[NSURL URLWithString:configUrlString] fileType:fileTypeConfig completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    //1.首先下载并保存最新的Config文件在Tmp文件夹
+    [self downloadLastFileFromUrl:[NSURL URLWithString:configUrlString] fileType:fileTypeConfig completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error) {
             
             return ;
         }
+        NSString *congfigTempPath= [[self tempDirectoty]stringByAppendingPathComponent:@"config.json"];
+        NSFileManager *mgr = [NSFileManager defaultManager];
+        BOOL moveSuc =[mgr moveItemAtPath:location.path toPath:congfigTempPath error:nil];
+        NSData *data;
+        if (!moveSuc) {
+            return;
+        }
+        data = [NSData dataWithContentsOfFile:congfigTempPath];
         NSError *serializaError;
         NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&serializaError];
         if (serializaError) {
@@ -192,9 +200,24 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
         }
         UpdaterConfig *config = [[UpdaterConfig alloc]initWithDic:dictionary];
         ReactNativeUpdateType updateType =[self shouldDownloadUpdateFileWithLastConfig:config];
-        if (updateType > 0) {
+        if (updateType==ReactNativeUpdateRollBack) {
+            //回滚
+            BOOL rollbackSec = [self rollBack];
+            if (rollbackSec) {
+                NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:@"回滚成功",@"message", nil];
+                UpdateOperation *result = [[UpdateOperation alloc]initWithDic:dic];
+                success(result);
+                return;
+            }else{
+                NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:@"回滚失败",@"message", nil];
+                UpdateOperation *result = [[UpdateOperation alloc]initWithDic:dic];
+                failure(result);
+                return;
+            }
+        }
+        else if (updateType > 1) {
             //如果需下载最新的Bundle file
-            [self downloadLastFileFromUrl:[NSURL URLWithString:bundleUrlString] fileType:fileTypeJSBundle completionHandler:^(NSData * _Nullable responseData, NSURLResponse * _Nullable responseContent, NSError * _Nullable error) {
+            [self downloadLastFileFromUrl:[NSURL URLWithString:bundleUrlString] fileType:fileTypeJSBundle completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                 //此时已经确定升级
                 //1.校验，解压，
                 //2.拿到文件后，执行传入文件方法。
@@ -213,7 +236,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
         }
 #warning 新bundle写入完成以后才会写入最新的配置文件 配置文件是对Bundle的描述
         //新bundle写入完成以后才会更新config文件
-         NSString* filename = [NSString stringWithFormat:@"%@/%@", [self codeDirectory], @"config.json"];
+        NSString* filename = [NSString stringWithFormat:@"%@/%@", [self codeDirectory], @"config.json"];
         if ([data writeToFile:filename atomically:YES]) {
             
         }
@@ -222,31 +245,9 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
         else {
             NSLog(@"[ReactNativeUpdater]: Update save failed - %@.", error.localizedDescription);
         }
+        
     }];
 }
-
-
-
-
-
-/*  这里暂时先不管文件的最终保存目录在哪里，使用这个方法的人负责下载文件的存储和读取。
- ————-->> 传入两个文件 自动控制升级
- //传入的文件，最终写入JScode 目录，替换以前的Bundle。
- */
- 
-- (void)updateWithConfigFile:(NSURL *)configFile bundleFile:(NSURL *)bundleFile Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure {
-    UpdaterConfig *config = [self updateConfigByConfigFile:configFile];
-    ReactNativeUpdateType updateType =[self shouldDownloadUpdateFileWithLastConfig:config];
-    if (updateType > 0) {
-        [self updateWithFile:bundleFile updateType:updateType Success:^(UpdateOperation *opreation) {
-            
-        } failure:^(UpdateOperation *opreation) {
-            
-        }];
-    }
-}
-
-
 //执行升级
 - (void)updateWithFile:(NSURL *)file updateType:(ReactNativeUpdateType)updateType Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure {
     
@@ -272,11 +273,6 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
             
         }
             break;
-        case ReactNativeUpdateRollBack:{
-            //回滚
-            
-        }
-            break;
             
         default:
             break;
@@ -285,7 +281,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 }
 
 //下载文件
-- (void)downloadLastFileFromUrl:(NSURL *)downloadUrl fileType:(NSString *)fileType completionHandler:(void (^)(NSData * __nullable responseData, NSURLResponse * __nullable responseContent, NSError * __nullable error))completionHandler {
+- (void)downloadLastFileFromUrl:(NSURL *)downloadUrl fileType:(NSString *)fileType completionHandler:(void (^)(NSURL * __nullable location, NSURLResponse * __nullable response, NSError * __nullable error))completionHandler {
     
     NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
     sessionConfig.allowsCellularAccess = YES;
@@ -294,7 +290,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     sessionConfig.HTTPMaximumConnectionsPerHost = 1;
     NSURLSession *session =[NSURLSession sessionWithConfiguration:sessionConfig];
     session.sessionDescription = fileType;
-    NSURLSessionDataTask *dataTask = [session dataTaskWithURL:downloadUrl completionHandler:completionHandler];
+    NSURLSessionDownloadTask *dataTask = [session downloadTaskWithURL:downloadUrl completionHandler:completionHandler];
     [dataTask resume];
     
 }
@@ -321,7 +317,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 }
 
 //解压缩文件
--(BOOL)unZipFileWithConfig:(UpdaterConfig *)config file:(NSString *)file {
+-(BOOL)unZipFileWithConfig:(UpdaterConfig *)config zipFile:(NSString *)file {
     ZipArchive *unZip = [[ZipArchive alloc]init];
     [unZip UnzipOpenFile:file Password:zipPassword];
     NSString *unzipVerifyDirectory;
@@ -337,7 +333,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     return NO;
 }
 
-//解密文件(文件加密后是Base64.【然后压缩<解压缩得到的是Base64>】)
+//解密文件(文件加密后是Base64.【然后压缩<解压缩得到的是Base64>)
 -(NSString *)decryptionFile:(NSString *)file{
     CocoaSecurityResult *aes256Decrypt = [CocoaSecurity aesDecryptWithBase64:file
                                                                       hexKey:securityHexKey
@@ -355,6 +351,10 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     return string;
 }
 
+-(BOOL)rollBack {
+    
+    return NO;
+}
 
 
 @end
