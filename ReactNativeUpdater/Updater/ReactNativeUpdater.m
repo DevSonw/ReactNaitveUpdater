@@ -265,9 +265,14 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 }
 
 //解压缩文件
+-(void)unZipFile:(NSString *)file{
+    
+    
+}
 
 //生成MD5
 -(NSString *)generateMD5SignFromFile:(NSString *)file{
+    
     
     return nil;
 }
