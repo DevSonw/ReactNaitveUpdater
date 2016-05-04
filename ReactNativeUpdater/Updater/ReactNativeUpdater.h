@@ -11,7 +11,7 @@
  1.首先到获取到最新的配置文件，对比是否需要升级。
  2.根据最新配置文件信息，是否请求最新的JSBunlde.
  3.应用最新的bundel
- 4.加入回滚机制，
+ 4.加入回滚机制，把上一版的Bundle 放入history目录。附带版本信息。
  */
 
 #import <Foundation/Foundation.h>

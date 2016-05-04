@@ -199,8 +199,10 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 
 
 
-/*  暂时先不管
+/*  这里暂时先不管文件的最终保存目录在哪里，使用这个方法的人负责下载文件的存储和读取。
  ————-->> 传入两个文件 自动控制升级
+ //传入的文件，最终写入JScode 目录，替换以前的Bundle。
+ */
  
 - (void)updateWithConfigFile:(NSURL *)configFile bundleFile:(NSURL *)bundleFile Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure {
     UpdaterConfig *config = [self updateConfigByConfigFile:configFile];
@@ -214,7 +216,6 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     }
 }
 
- */
 
 //执行升级
 - (void)updateWithFile:(NSURL *)file updateType:(ReactNativeUpdateType)updateType Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure {
@@ -262,6 +263,29 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     [dataTask resume];
     
 }
+
+//解压缩文件
+
+//生成MD5
+-(NSString *)generateMD5SignFromFile:(NSString *)file{
+    
+    return nil;
+}
+
+//验证MD5签名
+-(BOOL)checkMD5SignValidForMD5:(NSString *)md5 {
+    
+    
+    
+    
+    
+    
+    return NO;
+}
+
+//解密文件
+
+
 
 
 @end
