@@ -9,6 +9,7 @@
 #import "ReactNativeUpdater.h"
 #import "CocoaSecurity.h"
 #import "ZipArchive.h"
+#import "DiffMatchPatch.h"
 
 NSString * const fileTypeConfig = @"configFile";
 NSString * const fileTypeJSBundle   = @"jsBundle";
@@ -344,11 +345,14 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     return aes256Decrypt.utf8String;
 }
 
-//应用增量文件
-
--(NSString *)addDiffBunleToJSBundle:(NSString *)diff{
-    
-    return nil;
+//应用增量文件 所使用的Bundel 和diffString 都是解密后的String
+-(NSString *)addDiffSting:(NSString *)diff toJSBundle:(NSString *)bundle{
+    NSData *diffData = [diff dataUsingEncoding:NSUTF8StringEncoding ];
+    NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithData:diffData];
+    DiffMatchPatch *match = [[DiffMatchPatch alloc]init];
+    NSArray *currentArray = [match patch_apply:array toString:bundle];
+    NSString *string = currentArray[0];
+    return string;
 }
 
 
