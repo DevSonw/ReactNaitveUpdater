@@ -22,6 +22,7 @@
 @property (nonatomic,copy)NSString *desc;//配置描述信息
 @property (nonatomic,copy)NSString *date;//更新日期
 @property (nonatomic,copy)NSString *type;//升级类型
+@property (nonatomic,copy)NSString *apply;//应用类型
 
 @end
 

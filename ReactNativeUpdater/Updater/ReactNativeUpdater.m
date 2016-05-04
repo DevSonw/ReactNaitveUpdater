@@ -7,9 +7,15 @@
 //
 
 #import "ReactNativeUpdater.h"
+#import "CocoaSecurity.h"
+#import "ZipArchive.h"
 
 NSString * const fileTypeConfig = @"configFile";
 NSString * const fileTypeJSBundle   = @"jsBundle";
+NSString * const zipPassword = @"";
+NSString * const MD5Salt = @"";
+NSString * const securityHexKey = @"";
+NSString * const securityHexIv = @"";
 
 @implementation ReactNativeUpdater
 
@@ -55,6 +61,10 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 - (NSString *)libraryDirectory {
     return [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject];
 }
+//获取Temp 路径
+- (NSString *)tempDirectoty {
+    return NSTemporaryDirectory();
+}
 //默认的JSBunlde
 - (NSURL *)defaultJSCodeLocation{
     NSURL* defaultJSCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
@@ -66,10 +76,32 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     return defaultConfigFile;
 }
 
+//保存临时下载的Bundle和Config文件目录
+- (NSString *)bundleTmpDirectory {
+    NSString* tmpDirectory = [self tempDirectoty];
+    NSString *filePathAndDirectory = [tmpDirectory stringByAppendingPathComponent:@"JSBundle"];
+    NSError *error;
+    NSFileManager* fileManager = [NSFileManager defaultManager];
+    BOOL isDir;
+    if ([fileManager fileExistsAtPath:filePathAndDirectory isDirectory:&isDir]) {
+        if (isDir) {
+            return filePathAndDirectory;
+        }
+    }
+    if (![fileManager createDirectoryAtPath:filePathAndDirectory
+                withIntermediateDirectories:YES
+                                 attributes:nil
+                                      error:&error])
+    {
+        NSLog(@"Create directory error: %@", error);
+        return nil;
+    }
+    return filePathAndDirectory;
+}
 //获取代码文件&配置文件路径
 - (NSString *)codeDirectory {
     NSString* libraryDirectory = [self libraryDirectory];
-    NSString *filePathAndDirectory = [libraryDirectory stringByAppendingPathComponent:@"JSCode"];
+    NSString *filePathAndDirectory = [libraryDirectory stringByAppendingPathComponent:@"JSBundle"];
     NSError *error;
     NSFileManager* fileManager = [NSFileManager defaultManager];
     BOOL isDir;
@@ -99,7 +131,6 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 }
 
 //获取当前的配置文件,如果没有则返回默认的bundle 中的配置文件
-
 - (NSURL*)currentConfigFile{
     NSString* currentConfigFileString = [[self codeDirectory] stringByAppendingPathComponent:@"config.json"];
     if (currentConfigFileString && [[NSFileManager defaultManager] fileExistsAtPath:currentConfigFileString]) {
@@ -119,8 +150,6 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     UpdaterConfig *config = [[UpdaterConfig alloc]initWithDic:confiDic];
     return config;
 }
-//
-
 
 //对比配置文件 是否下载新的bundle
 - (ReactNativeUpdateType)shouldDownloadUpdateFileWithLastConfig:(UpdaterConfig *)updateConfig {
@@ -242,6 +271,11 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
             
         }
             break;
+        case ReactNativeUpdateRollBack:{
+            //回滚
+            
+        }
+            break;
             
         default:
             break;
@@ -264,32 +298,58 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     
 }
 
-//解压缩文件
--(void)unZipFile:(NSString *)file{
-    
-    
-}
+//1.校验MD5.
+//2.解压缩
+//3.解密
+//4.通过增量合成Bundle||全量更新，直接Bundle
+//5.
 
 //生成MD5
 -(NSString *)generateMD5SignFromFile:(NSString *)file{
-    
-    
-    return nil;
+    CocoaSecurityResult *md5 = [CocoaSecurity md5:[NSString stringWithFormat:@"%@%@",file,MD5Salt]];
+    return md5.hex;
 }
 
 //验证MD5签名
--(BOOL)checkMD5SignValidForMD5:(NSString *)md5 {
-    
-    
-    
-    
-    
-    
+-(BOOL)checkMD5SignValidWithConfig:(UpdaterConfig *)config fileMD5:(NSString *)md5 {
+    //传古来的MD5为生成的MD5.与配置文件中的MD5比较。
+    if ([md5.lowercaseString isEqualToString:config.md5.lowercaseString]) {
+        return YES;
+    }
     return NO;
 }
 
-//解密文件
+//解压缩文件
+-(BOOL)unZipFileWithConfig:(UpdaterConfig *)config file:(NSString *)file {
+    ZipArchive *unZip = [[ZipArchive alloc]init];
+    [unZip UnzipOpenFile:file Password:zipPassword];
+    NSString *unzipVerifyDirectory;
+    if (config.type.integerValue==ReactNativeUpdateEntiretyUpdate) {
+        unzipVerifyDirectory = [[self tempDirectoty]stringByAppendingPathComponent:@"main.jsbundle"];
+    }else if(config.type.integerValue ==ReactNativeUpdatePartUpdate||config.type.integerValue ==ReactNativeUpdatePatchUpdate){
+        unzipVerifyDirectory = [[self tempDirectoty]stringByAppendingPathComponent:@"bundle.diff"];
+    }
+    BOOL unZipSuccess = [unZip UnzipFileTo:unzipVerifyDirectory overWrite:YES];
+    if (unZipSuccess) {
+        return YES;
+    }
+    return NO;
+}
 
+//解密文件(文件加密后是Base64.【然后压缩<解压缩得到的是Base64>】)
+-(NSString *)decryptionFile:(NSString *)file{
+    CocoaSecurityResult *aes256Decrypt = [CocoaSecurity aesDecryptWithBase64:file
+                                                                      hexKey:securityHexKey
+                                                                       hexIv:securityHexIv];
+    return aes256Decrypt.utf8String;
+}
+
+//应用增量文件
+
+-(NSString *)addDiffBunleToJSBundle:(NSString *)diff{
+    
+    return nil;
+}
 
 
 

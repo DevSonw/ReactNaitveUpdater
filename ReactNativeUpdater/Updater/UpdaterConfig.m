@@ -20,6 +20,7 @@
         _desc = [dic getStringValueForKey:@"desc" defaultValue:@""];
         _date = [dic getStringValueForKey:@"date" defaultValue:@""];
         _type = [dic getStringValueForKey:@"type" defaultValue:@""];
+        _apply = [dic getStringValueForKey:@"apply" defaultValue:@""];
     }
     return self;
 }
