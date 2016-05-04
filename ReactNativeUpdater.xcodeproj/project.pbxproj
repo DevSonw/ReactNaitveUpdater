@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C65BB5A21CDA0FB100C93D43 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C65BB5A11CDA0FB100C93D43 /* libz.tbd */; };
 		C695E7751CCF3E670070DC20 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C695E7741CCF3E670070DC20 /* main.m */; };
 		C695E7781CCF3E670070DC20 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C695E7771CCF3E670070DC20 /* AppDelegate.m */; };
 		C695E7801CCF3E670070DC20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C695E77F1CCF3E670070DC20 /* Assets.xcassets */; };
@@ -35,6 +36,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C65BB5A11CDA0FB100C93D43 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		C695E7701CCF3E660070DC20 /* ReactNativeUpdater.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReactNativeUpdater.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C695E7741CCF3E670070DC20 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C695E7761CCF3E670070DC20 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C65BB5A21CDA0FB100C93D43 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,6 +138,7 @@
 		C695E7731CCF3E670070DC20 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C65BB5A11CDA0FB100C93D43 /* libz.tbd */,
 				C695E7741CCF3E670070DC20 /* main.m */,
 			);
 			name = "Supporting Files";

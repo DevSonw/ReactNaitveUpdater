@@ -80,7 +80,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 //保存临时下载的Bundle和Config文件目录
 - (NSString *)bundleTmpDirectory {
     NSString* tmpDirectory = [self tempDirectoty];
-    NSString *filePathAndDirectory = [tmpDirectory stringByAppendingPathComponent:@"JSBundle"];
+    NSString *filePathAndDirectory = [tmpDirectory stringByAppendingPathComponent:@"jstmp"];
     NSError *error;
     NSFileManager* fileManager = [NSFileManager defaultManager];
     BOOL isDir;
@@ -102,7 +102,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 //获取代码文件&配置文件路径
 - (NSString *)codeDirectory {
     NSString* libraryDirectory = [self libraryDirectory];
-    NSString *filePathAndDirectory = [libraryDirectory stringByAppendingPathComponent:@"JSBundle"];
+    NSString *filePathAndDirectory = [libraryDirectory stringByAppendingPathComponent:@"jsbundle"];
     NSError *error;
     NSFileManager* fileManager = [NSFileManager defaultManager];
     BOOL isDir;
@@ -121,6 +121,29 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     }
     return filePathAndDirectory;
 }
+//获取上一个版本的JSbundle
+- (NSString *)historyDirectory {
+    NSString* libraryDirectory = [self libraryDirectory];
+    NSString *filePathAndDirectory = [libraryDirectory stringByAppendingPathComponent:@"history"];
+    NSError *error;
+    NSFileManager* fileManager = [NSFileManager defaultManager];
+    BOOL isDir;
+    if ([fileManager fileExistsAtPath:filePathAndDirectory isDirectory:&isDir]) {
+        if (isDir) {
+            return filePathAndDirectory;
+        }
+    }
+    if (![fileManager createDirectoryAtPath:filePathAndDirectory
+                withIntermediateDirectories:YES
+                                 attributes:nil
+                                      error:&error])
+    {
+        NSLog(@"Create directory error: %@", error);
+        return nil;
+    }
+    return filePathAndDirectory;
+}
+
 
 //获取当前的jsbundle 当前的如果没有，返回默认bundle 中的JS
 - (NSURL*)currentJSCodeLocation{
@@ -184,7 +207,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
             
             return ;
         }
-        NSString *congfigTempPath= [[self tempDirectoty]stringByAppendingPathComponent:@"config.json"];
+        NSString *congfigTempPath= [[self bundleTmpDirectory]stringByAppendingPathComponent:@"config.json"];
         NSFileManager *mgr = [NSFileManager defaultManager];
         BOOL moveSuc =[mgr moveItemAtPath:location.path toPath:congfigTempPath error:nil];
         NSData *data;
@@ -200,10 +223,10 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
         }
         UpdaterConfig *config = [[UpdaterConfig alloc]initWithDic:dictionary];
         ReactNativeUpdateType updateType =[self shouldDownloadUpdateFileWithLastConfig:config];
+        //回滚
         if (updateType==ReactNativeUpdateRollBack) {
-            //回滚
-            BOOL rollbackSec = [self rollBack];
-            if (rollbackSec) {
+            BOOL rollbackSuc = [self rollBack];
+            if (rollbackSuc) {
                 NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:@"回滚成功",@"message", nil];
                 UpdateOperation *result = [[UpdateOperation alloc]initWithDic:dic];
                 success(result);
@@ -219,7 +242,28 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
             //如果需下载最新的Bundle file
             [self downloadLastFileFromUrl:[NSURL URLWithString:bundleUrlString] fileType:fileTypeJSBundle completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                 //此时已经确定升级
-                //1.校验，解压，
+                //先下载，放到TMP
+                NSString *zipTempPath = [[self bundleTmpDirectory]stringByAppendingPathComponent:@"bundle.zip"];;
+                NSFileManager *mgr = [NSFileManager defaultManager];
+                BOOL moveSuc =[mgr moveItemAtPath:location.path toPath:zipTempPath error:nil];
+                if (!moveSuc) {
+                    return;
+                }
+                //1.校验
+                NSString *fileMd5 = [self generateMD5SignFromFile:zipTempPath];
+                BOOL isVaild  =[self checkMD5SignValidWithConfig:config fileMD5:fileMd5];
+                if (!isVaild) {
+                    return;
+                }
+                //2.解压 解压后的文件在JSTmp文件夹内
+                BOOL unzipSuc = [self unZipFileWithConfig:config zipFile:zipTempPath];
+                if (!unzipSuc) {
+                    return;
+                }
+                //3.解密
+                
+                
+                
                 //2.拿到文件后，执行传入文件方法。
                 [self updateWithFile:nil updateType:updateType Success:^(UpdateOperation *opreation) {
                     
@@ -303,7 +347,10 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 
 //生成MD5
 -(NSString *)generateMD5SignFromFile:(NSString *)file{
-    CocoaSecurityResult *md5 = [CocoaSecurity md5:[NSString stringWithFormat:@"%@%@",file,MD5Salt]];
+    NSURL *fileUrl = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@",file]];
+    NSData *data = [NSData dataWithContentsOfURL:fileUrl];
+    NSString *fileString  = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    CocoaSecurityResult *md5 = [CocoaSecurity md5:[NSString stringWithFormat:@"%@%@",fileString,MD5Salt]];
     return md5.hex;
 }
 
@@ -350,8 +397,11 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     NSString *string = currentArray[0];
     return string;
 }
-
+//回滚
 -(BOOL)rollBack {
+    
+    
+    
     
     return NO;
 }
