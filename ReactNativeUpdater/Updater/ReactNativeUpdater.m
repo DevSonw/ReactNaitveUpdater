@@ -218,7 +218,6 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
         NSError *serializaError;
         NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&serializaError];
         if (serializaError) {
-            
             return ;
         }
         UpdaterConfig *config = [[UpdaterConfig alloc]initWithDic:dictionary];
@@ -260,18 +259,16 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
                 if (!unzipSuc) {
                     return;
                 }
-                //3.解密
+                //3.取到文件
                 NSString *sourceFile;
                 if (config.type.integerValue==ReactNativeUpdateEntiretyUpdate) {
                     sourceFile = [[self tempDirectoty]stringByAppendingPathComponent:@"main.jsbundle"];
                 }else if(config.type.integerValue ==ReactNativeUpdatePartUpdate||config.type.integerValue ==ReactNativeUpdatePatchUpdate){
                     sourceFile = [[self tempDirectoty]stringByAppendingPathComponent:@"bundle.diff"];
                 }
-                
-                NSString *codeString = [self decryptionFile:sourceFile];
-                if (codeString) {
-                    //2.拿到文件后，执行传入文件方法。传入的是已经解密的code
-                    [self updateWithFile:codeString updateType:updateType Success:^(UpdateOperation *opreation) {
+                if (sourceFile) {
+                    //2.拿到文件后，执行传入文件方法。传入的文件是未解密的文件才temp文件夹内
+                    [self updateWithFile:sourceFile updateType:updateType Success:^(UpdateOperation *opreation) {
                         
                         
                     } failure:^(UpdateOperation *opreation) {
@@ -285,18 +282,6 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
             NSDictionary *resultDic =[[NSDictionary alloc]initWithObjectsAndKeys:@"不需要更新",@"message", nil];
             failure([[UpdateOperation alloc]initWithDic:resultDic]);
         }
-#warning 新bundle写入完成以后才会写入最新的配置文件 配置文件是对Bundle的描述
-        //新bundle写入完成以后才会更新config文件
-        NSString* filename = [NSString stringWithFormat:@"%@/%@", [self codeDirectory], @"config.json"];
-        if ([data writeToFile:filename atomically:YES]) {
-            
-        }
-        
-        
-        else {
-            NSLog(@"[ReactNativeUpdater]: Update save failed - %@.", error.localizedDescription);
-        }
-        
     }];
 }
 //执行升级
@@ -305,21 +290,54 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     switch (updateType) {
         case ReactNativeUpdateEntiretyUpdate:
         {
-            //全量
-            
-            
+            //全量 直接替换bunlde 将解压出的Temp 文件夹内的文件移到 jsbundle 下。
+            NSURL *url = [[NSURL alloc]initWithString:[NSString stringWithFormat:@"file://%@",file]];
+            NSData *data = [[NSData alloc]initWithContentsOfURL:url];
+            NSFileManager *fileManger = [NSFileManager defaultManager];
+            NSString *filePath = [[self codeDirectory]stringByAppendingPathComponent:@"main.jsbundle"];
+            BOOL res =  [fileManger createFileAtPath:filePath contents:data attributes:nil];
+            if(res){
+                //成功
+#warning 新bundle写入完成以后才会写入最新的配置文件 配置文件是对Bundle的描述
+
+            }
+            //失败
         }
             break;
         case ReactNativeUpdatePartUpdate:
         {
-            //增量
-            
+            //增量 合成bundle   替换bundle
+            NSString *fileString = [self decryptionFile:file];
+            NSString *bundleString = [self decryptionFile:[[self codeDirectory] stringByAppendingPathComponent:@"main.jsbundle"]];
+            NSString *string = [self addDiffSting:fileString toJSBundle:bundleString];
+            //写进location
+            NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+            NSString *filePath = [[self codeDirectory]stringByAppendingPathComponent:@"main.jsbundle"];
+            NSFileManager *fileManger = [NSFileManager defaultManager];
+            BOOL res =  [fileManger createFileAtPath:filePath contents:data attributes:nil];
+            if(res){
+                //成功
+            }
+            //失败
             
         }
             break;
         case ReactNativeUpdatePatchUpdate:
         {
-            //补丁
+            //增量 合成bundle   替换bundle
+            NSString *fileString = [self decryptionFile:file];
+            NSString *bundleString = [self decryptionFile:[[self codeDirectory] stringByAppendingPathComponent:@"main.jsbundle"]];
+            NSString *string = [self addDiffSting:fileString toJSBundle:bundleString];
+            //写进location
+            NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+            NSString *filePath = [[self codeDirectory]stringByAppendingPathComponent:@"main.jsbundle"];
+            NSFileManager *fileManger = [NSFileManager defaultManager];
+            BOOL res =  [fileManger createFileAtPath:filePath contents:data attributes:nil];
+            if(res){
+                //成功
+            }
+            //失败
+
             
             
         }
@@ -411,12 +429,13 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 //回滚
 -(BOOL)rollBack {
     
-    
-    
-    
-    
     return NO;
 }
 
+//替换bundle
+-(void)modeBundle:(NSURL *)location toBundleDir:(NSURL *)dir {
+    
+    
+}
 
 @end
