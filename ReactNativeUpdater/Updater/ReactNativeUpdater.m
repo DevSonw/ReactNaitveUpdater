@@ -242,7 +242,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
             //如果需下载最新的Bundle file
             [self downloadLastFileFromUrl:[NSURL URLWithString:bundleUrlString] fileType:fileTypeJSBundle completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                 //此时已经确定升级
-                //先下载，放到TMP
+                //现在完成放到TMP目录
                 NSString *zipTempPath = [[self bundleTmpDirectory]stringByAppendingPathComponent:@"bundle.zip"];;
                 NSFileManager *mgr = [NSFileManager defaultManager];
                 BOOL moveSuc =[mgr moveItemAtPath:location.path toPath:zipTempPath error:nil];
@@ -261,17 +261,24 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
                     return;
                 }
                 //3.解密
+                NSString *sourceFile;
+                if (config.type.integerValue==ReactNativeUpdateEntiretyUpdate) {
+                    sourceFile = [[self tempDirectoty]stringByAppendingPathComponent:@"main.jsbundle"];
+                }else if(config.type.integerValue ==ReactNativeUpdatePartUpdate||config.type.integerValue ==ReactNativeUpdatePatchUpdate){
+                    sourceFile = [[self tempDirectoty]stringByAppendingPathComponent:@"bundle.diff"];
+                }
                 
-                
-                
-                //2.拿到文件后，执行传入文件方法。
-                [self updateWithFile:nil updateType:updateType Success:^(UpdateOperation *opreation) {
-                    
-                    
-                } failure:^(UpdateOperation *opreation) {
-                    
-                    
-                }];
+                NSString *codeString = [self decryptionFile:sourceFile];
+                if (codeString) {
+                    //2.拿到文件后，执行传入文件方法。传入的是已经解密的code
+                    [self updateWithFile:codeString updateType:updateType Success:^(UpdateOperation *opreation) {
+                        
+                        
+                    } failure:^(UpdateOperation *opreation) {
+                        
+                        
+                    }];
+                }
             }];
         }else{
             //不需要下载最新的bunlde
@@ -293,7 +300,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     }];
 }
 //执行升级
-- (void)updateWithFile:(NSURL *)file updateType:(ReactNativeUpdateType)updateType Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure {
+- (void)updateWithFile:(NSString *)file updateType:(ReactNativeUpdateType)updateType Success:(void (^)(UpdateOperation *opreation))success failure:(void (^)(UpdateOperation *opreation))failure {
     
     switch (updateType) {
         case ReactNativeUpdateEntiretyUpdate:
@@ -382,7 +389,11 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 
 //解密文件(文件加密后是Base64.【然后压缩<解压缩得到的是Base64>)
 -(NSString *)decryptionFile:(NSString *)file{
-    CocoaSecurityResult *aes256Decrypt = [CocoaSecurity aesDecryptWithBase64:file
+    
+    NSURL *fileUrl = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@",file]];
+    NSData *fileData = [[NSData alloc]initWithContentsOfURL:fileUrl];
+    NSString *fileString  = [[NSString alloc]initWithData:fileData encoding:NSUTF8StringEncoding];
+    CocoaSecurityResult *aes256Decrypt = [CocoaSecurity aesDecryptWithBase64:fileString
                                                                       hexKey:securityHexKey
                                                                        hexIv:securityHexIv];
     return aes256Decrypt.utf8String;
@@ -399,6 +410,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 }
 //回滚
 -(BOOL)rollBack {
+    
     
     
     
