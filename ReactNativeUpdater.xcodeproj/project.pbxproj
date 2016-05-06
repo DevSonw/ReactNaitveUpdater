@@ -28,6 +28,7 @@
 		C695E8091CD0DB340070DC20 /* google.html in Resources */ = {isa = PBXBuildFile; fileRef = C695E8081CD0DB340070DC20 /* google.html */; };
 		C695E80B1CD0DC4B0070DC20 /* bundle.diff in Resources */ = {isa = PBXBuildFile; fileRef = C695E80A1CD0DC4B0070DC20 /* bundle.diff */; };
 		C695E80E1CD0F16B0070DC20 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C695E80D1CD0F16B0070DC20 /* NSDictionaryAdditions.m */; };
+		C6D5DC981CDC542800D038A1 /* RNUDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = C6D5DC971CDC542800D038A1 /* RNUDevice.m */; };
 		C6E9D17A1CD9A93F000E0142 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = C6E9D16E1CD9A93E000E0142 /* ioapi.c */; };
 		C6E9D17B1CD9A93F000E0142 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = C6E9D1701CD9A93F000E0142 /* mztools.c */; };
 		C6E9D17C1CD9A93F000E0142 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = C6E9D1721CD9A93F000E0142 /* unzip.c */; };
@@ -73,6 +74,8 @@
 		C695E80A1CD0DC4B0070DC20 /* bundle.diff */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = bundle.diff; sourceTree = "<group>"; };
 		C695E80C1CD0F16B0070DC20 /* NSDictionaryAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionaryAdditions.h; sourceTree = "<group>"; };
 		C695E80D1CD0F16B0070DC20 /* NSDictionaryAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDictionaryAdditions.m; sourceTree = "<group>"; };
+		C6D5DC961CDC542800D038A1 /* RNUDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNUDevice.h; sourceTree = "<group>"; };
+		C6D5DC971CDC542800D038A1 /* RNUDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNUDevice.m; sourceTree = "<group>"; };
 		C6E9D16D1CD9A93E000E0142 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
 		C6E9D16E1CD9A93E000E0142 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
 		C6E9D16F1CD9A93E000E0142 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
@@ -178,6 +181,8 @@
 		C695E7C81CCF410F0070DC20 /* Updater */ = {
 			isa = PBXGroup;
 			children = (
+				C6D5DC961CDC542800D038A1 /* RNUDevice.h */,
+				C6D5DC971CDC542800D038A1 /* RNUDevice.m */,
 				C695E7E61CCF4BD90070DC20 /* UpdaterConfig.h */,
 				C695E7E71CCF4BD90070DC20 /* UpdaterConfig.m */,
 				C695E7C91CCF410F0070DC20 /* ReactNativeUpdater.h */,
@@ -305,6 +310,7 @@
 				C695E7E81CCF4BD90070DC20 /* UpdaterConfig.m in Sources */,
 				C695E7D01CCF410F0070DC20 /* NSString+UnicharUtilities.m in Sources */,
 				C6E9D17F1CD9A93F000E0142 /* ZipArchive.m in Sources */,
+				C6D5DC981CDC542800D038A1 /* RNUDevice.m in Sources */,
 				C695E8031CD0AEEC0070DC20 /* UpdateOperation.m in Sources */,
 				C695E80E1CD0F16B0070DC20 /* NSDictionaryAdditions.m in Sources */,
 				C695E7751CCF3E670070DC20 /* main.m in Sources */,

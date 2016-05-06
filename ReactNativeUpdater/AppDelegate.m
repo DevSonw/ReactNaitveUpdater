@@ -25,13 +25,16 @@
     
     return YES;
 }
+
 - (void)checkForUpdate {
     ReactNativeUpdater *update = [ReactNativeUpdater sharedInstance];
    
     [update updateWithConfigUrl:@"https://www.baidu.com" bundleUrl:@"https://www.baiud.com" Success:^(UpdateOperation *opreation) {
+    //刷新页面 重设RootView 。
         NSLog(@"---%@",opreation.message);
         
     } failure:^(UpdateOperation *opreation) {
+    //使用老的bundle。什么都不做
         
         NSLog(@"===%@",opreation.message);
         

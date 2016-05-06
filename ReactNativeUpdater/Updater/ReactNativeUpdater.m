@@ -46,7 +46,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 - (id)mutableCopy {
     return [[ReactNativeUpdater alloc] init];
 }
-- (id) init {
+- (id)init {
     if(UPDATER_SINGLETON){
         return UPDATER_SINGLETON;
     }
@@ -67,22 +67,20 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     return NSTemporaryDirectory();
 }
 //默认的JSBunlde
-- (NSURL *)defaultJSCodeLocation{
-    NSURL* defaultJSCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-    return defaultJSCodeLocation;
+- (NSURL *)defaultJSCodeLocation {
+    return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 }
 //默认的Config
-- (NSURL *)defaultConfigFile{
-    NSURL* defaultConfigFile = [[NSBundle mainBundle] URLForResource:@"config" withExtension:@"json"];
-    return defaultConfigFile;
+- (NSURL *)defaultConfigFile {
+    return [[NSBundle mainBundle] URLForResource:@"config" withExtension:@"json"];
 }
 
 //保存临时下载的Bundle和Config文件目录
 - (NSString *)bundleTmpDirectory {
-    NSString* tmpDirectory = [self tempDirectoty];
+    NSString *tmpDirectory = [self tempDirectoty];
     NSString *filePathAndDirectory = [tmpDirectory stringByAppendingPathComponent:@"jstmp"];
     NSError *error;
-    NSFileManager* fileManager = [NSFileManager defaultManager];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL isDir;
     if ([fileManager fileExistsAtPath:filePathAndDirectory isDirectory:&isDir]) {
         if (isDir) {
@@ -101,10 +99,10 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 }
 //获取代码文件&配置文件路径
 - (NSString *)codeDirectory {
-    NSString* libraryDirectory = [self libraryDirectory];
+    NSString *libraryDirectory = [self libraryDirectory];
     NSString *filePathAndDirectory = [libraryDirectory stringByAppendingPathComponent:@"jsbundle"];
     NSError *error;
-    NSFileManager* fileManager = [NSFileManager defaultManager];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL isDir;
     if ([fileManager fileExistsAtPath:filePathAndDirectory isDirectory:&isDir]) {
         if (isDir) {
@@ -123,7 +121,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 }
 //获取上一个版本的JSbundle
 - (NSString *)historyDirectory {
-    NSString* libraryDirectory = [self libraryDirectory];
+    NSString *libraryDirectory = [self libraryDirectory];
     NSString *filePathAndDirectory = [libraryDirectory stringByAppendingPathComponent:@"history"];
     NSError *error;
     NSFileManager* fileManager = [NSFileManager defaultManager];
@@ -146,8 +144,8 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 
 
 //获取当前的jsbundle 当前的如果没有，返回默认bundle 中的JS
-- (NSURL*)currentJSCodeLocation{
-    NSString* currentJSCodeURLString = [[self codeDirectory] stringByAppendingPathComponent:@"main.jsbundle"];
+- (NSURL *)currentJSCodeLocation{
+    NSString *currentJSCodeURLString = [[self codeDirectory] stringByAppendingPathComponent:@"main.jsbundle"];
     if (currentJSCodeURLString && [[NSFileManager defaultManager] fileExistsAtPath:currentJSCodeURLString]) {
         self.currentJSCodeLocation = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@", currentJSCodeURLString]];
     }
@@ -155,8 +153,8 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 }
 
 //获取当前的配置文件,如果没有则返回默认的bundle 中的配置文件
-- (NSURL*)currentConfigFile{
-    NSString* currentConfigFileString = [[self codeDirectory] stringByAppendingPathComponent:@"config.json"];
+- (NSURL *)currentConfigFile{
+    NSString *currentConfigFileString = [[self codeDirectory] stringByAppendingPathComponent:@"config.json"];
     if (currentConfigFileString && [[NSFileManager defaultManager] fileExistsAtPath:currentConfigFileString]) {
         self.currentConfigFile = [NSURL URLWithString:[NSString stringWithFormat:@"file://%@", currentConfigFileString]];
     }
@@ -271,8 +269,17 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
                     [self updateWithFile:sourceFile updateType:updateType Success:^(UpdateOperation *opreation) {
                         
                         
+                        
+                        
+                        
+                        
+                        
                     } failure:^(UpdateOperation *opreation) {
                         
+                        
+                        
+                        
+
                         
                     }];
                 }
@@ -299,7 +306,7 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
             if(res){
                 //成功
 #warning 新bundle写入完成以后才会写入最新的配置文件 配置文件是对Bundle的描述
-
+                //最后还要备份。将上一个bundle 放进去history 文件夹
             }
             //失败
         }
@@ -429,13 +436,9 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
 //回滚
 -(BOOL)rollBack {
     
+    //将history的bundle 放进去当前的bundle文件。
+    
     return NO;
-}
-
-//替换bundle
--(void)modeBundle:(NSURL *)location toBundleDir:(NSURL *)dir {
-    
-    
 }
 
 @end
