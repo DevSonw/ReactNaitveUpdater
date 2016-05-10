@@ -9,6 +9,8 @@
 #import "AppDelegate.h"
 #import "ReactNativeUpdater.h"
 #import "DiffMatchPatch.h"
+#import "RCTRootView.h"
+
 
 @interface AppDelegate ()
 
@@ -21,7 +23,9 @@
     
     [self checkForUpdate];
     
-    [self displayUI];
+   // [self displayUI];
+    [self reactNaitve];
+    
     
     return YES;
 }
@@ -40,15 +44,29 @@
         
     }];
 }
+- (void)reactNaitve{
+    NSURL *jsCodeLocation;
+    // jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
+    jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"20" withExtension:@"jsbundle"];
+    RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                        moduleName:@"AwesomeProject"
+                                                 initialProperties:nil
+                                                     launchOptions:nil];
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    UIViewController *rootViewController = [UIViewController new];
+    rootViewController.view = rootView;
+    self.window.rootViewController = rootViewController;
+    [self.window makeKeyAndVisible];
+}
 
 - (void)displayUI {
     UIViewController *viewController = [[UIViewController alloc]init];
     viewController.view.backgroundColor = [UIColor whiteColor];
     
-    NSURL *googleUrl = [[NSBundle mainBundle] URLForResource:@"google" withExtension:@"html"];
+    NSURL *googleUrl = [[NSBundle mainBundle] URLForResource:@"10" withExtension:@"jsbundle"];
     NSString *googleString = [NSString stringWithContentsOfURL:googleUrl encoding:NSUTF8StringEncoding error:nil];
     
-    NSURL *baiduUrl = [[NSBundle mainBundle] URLForResource:@"baidu" withExtension:@"html"];
+    NSURL *baiduUrl = [[NSBundle mainBundle] URLForResource:@"20" withExtension:@"jsbundle"];
     NSString *baiduString = [NSString stringWithContentsOfURL:baiduUrl encoding:NSUTF8StringEncoding error:nil];
     
     NSURL *diffUrl = [[NSBundle mainBundle]URLForResource:@"bundle" withExtension:@"diff"];
@@ -59,7 +77,7 @@
     NSString *string = currentArray[0];
     
     if ([string isEqualToString:baiduString]) {
-        NSLog(@"google页面加上增量修改后，完全等于baidu 页面的内容");
+        NSLog(@"10页面加上增量修改后，完全等于20 页面的内容");
     }
     
     UIWebView *web = [[UIWebView alloc]initWithFrame:viewController.view.frame];
@@ -70,6 +88,7 @@
     self.window.backgroundColor = [UIColor clearColor];
     self.window.rootViewController = viewController;
     [self.window makeKeyAndVisible];
+    
 }
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
