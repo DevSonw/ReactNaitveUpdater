@@ -205,16 +205,6 @@
 		C695E7671CCF3E660070DC20 = {
 			isa = PBXGroup;
 			children = (
-				C6E09B6B1CE1E31F003451EA /* RCTText.xcodeproj */,
-				C6E09B491CE1CE69003451EA /* RCTWebSocket.xcodeproj */,
-				C6E09B431CE1CE5C003451EA /* RCTVibration.xcodeproj */,
-				C6E09B3D1CE1CE4B003451EA /* RCTSettings.xcodeproj */,
-				C6E09B371CE1CE43003451EA /* RCTNetwork.xcodeproj */,
-				C6E09B311CE1CE3C003451EA /* RCTLinking.xcodeproj */,
-				C6E09B2B1CE1CE2C003451EA /* RCTImage.xcodeproj */,
-				C6E09B251CE1CE1E003451EA /* RCTGeolocation.xcodeproj */,
-				C6E09B1F1CE1CDFE003451EA /* RCTActionSheet.xcodeproj */,
-				C6E09B091CE1CA41003451EA /* React.xcodeproj */,
 				C695E7721CCF3E670070DC20 /* ReactNativeUpdater */,
 				C695E7711CCF3E660070DC20 /* Products */,
 			);
@@ -241,6 +231,7 @@
 				C695E7B81CCF410F0070DC20 /* DiffTools */,
 				C695E7B41CCF40AE0070DC20 /* FileSecurity */,
 				C6E9D1181CD9A11A000E0142 /* Zip */,
+				C6F9369A1CE3151700536568 /* Libraries */,
 				C695E77F1CCF3E670070DC20 /* Assets.xcassets */,
 				C695E7841CCF3E670070DC20 /* Info.plist */,
 				C695E7731CCF3E670070DC20 /* Supporting Files */,
@@ -409,6 +400,24 @@
 				C6E9D1751CD9A93F000E0142 /* zip.h */,
 			);
 			path = minizip;
+			sourceTree = "<group>";
+		};
+		C6F9369A1CE3151700536568 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				C6E09B6B1CE1E31F003451EA /* RCTText.xcodeproj */,
+				C6E09B491CE1CE69003451EA /* RCTWebSocket.xcodeproj */,
+				C6E09B431CE1CE5C003451EA /* RCTVibration.xcodeproj */,
+				C6E09B3D1CE1CE4B003451EA /* RCTSettings.xcodeproj */,
+				C6E09B371CE1CE43003451EA /* RCTNetwork.xcodeproj */,
+				C6E09B311CE1CE3C003451EA /* RCTLinking.xcodeproj */,
+				C6E09B2B1CE1CE2C003451EA /* RCTImage.xcodeproj */,
+				C6E09B251CE1CE1E003451EA /* RCTGeolocation.xcodeproj */,
+				C6E09B1F1CE1CDFE003451EA /* RCTActionSheet.xcodeproj */,
+				C6E09B091CE1CA41003451EA /* React.xcodeproj */,
+			);
+			name = Libraries;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
