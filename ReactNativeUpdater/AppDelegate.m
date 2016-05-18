@@ -23,8 +23,8 @@
     
     [self checkForUpdate];
     
-   // [self displayUI];
-    [self reactNaitve];
+    [self displayUI];
+    //[self reactNaitve];
     
     
     return YES;
@@ -46,8 +46,8 @@
 }
 - (void)reactNaitve{
     NSURL *jsCodeLocation;
-    // jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
-    jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"20" withExtension:@"jsbundle"];
+     jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
+    //jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"20" withExtension:@"jsbundle"];
     RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                         moduleName:@"AwesomeProject"
                                                  initialProperties:nil
@@ -69,6 +69,16 @@
     NSURL *baiduUrl = [[NSBundle mainBundle] URLForResource:@"20" withExtension:@"jsbundle"];
     NSString *baiduString = [NSString stringWithContentsOfURL:baiduUrl encoding:NSUTF8StringEncoding error:nil];
     
+    RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:googleUrl
+                                                        moduleName:@"AwesomeProject"
+                                                 initialProperties:nil
+                                                     launchOptions:nil];
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    UIViewController *rootViewController = [UIViewController new];
+    rootViewController.view = rootView;
+    self.window.rootViewController = rootViewController;
+    [self.window makeKeyAndVisible];
+    
     NSURL *diffUrl = [[NSBundle mainBundle]URLForResource:@"bundle" withExtension:@"diff"];
     NSData *diffData = [NSData dataWithContentsOfURL:diffUrl];
     NSArray *array = [NSKeyedUnarchiver unarchiveObjectWithData:diffData];
@@ -80,14 +90,12 @@
         NSLog(@"10页面加上增量修改后，完全等于20 页面的内容");
     }
     
-    UIWebView *web = [[UIWebView alloc]initWithFrame:viewController.view.frame];
-    [web loadRequest:[NSURLRequest requestWithURL:baiduUrl]];
-    [viewController.view addSubview:web];
+    //拿到了 String  解密后的代码。 》》怎么搞成内存中 URL。
+    //存入TMP文件，传递url. 加载后立马删除
     
-    self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
-    self.window.backgroundColor = [UIColor clearColor];
-    self.window.rootViewController = viewController;
-    [self.window makeKeyAndVisible];
+    
+    
+    
     
 }
 - (void)applicationWillResignActive:(UIApplication *)application {

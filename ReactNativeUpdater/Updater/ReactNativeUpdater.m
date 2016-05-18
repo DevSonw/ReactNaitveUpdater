@@ -368,7 +368,6 @@ static ReactNativeUpdater *UPDATER_SINGLETON=nil;
     session.sessionDescription = fileType;
     NSURLSessionDownloadTask *dataTask = [session downloadTaskWithURL:downloadUrl completionHandler:completionHandler];
     [dataTask resume];
-    
 }
 
 //1.校验MD5.

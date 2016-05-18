@@ -57,7 +57,6 @@ NSMutableDictionary *kRNUDeviceEnv = nil;
                               @"screenScale": @(mainScreen.scale),
                               @"screenWidth": @(mainScreen.bounds.size.width),
                               @"screenHeight": @(mainScreen.bounds.size.height),
-                              
                               @"debug": @(debug),
                               };
         kRNUDeviceEnv = [[NSMutableDictionary alloc] initWithDictionary:def];
